@@ -66,7 +66,7 @@ if(!isset($_POST['submitted']))
                     </thead>
                     <tbody>
                         <?php
-                        $aNum = $rev->show();
+                        $aNum = $rev->showAssigntoRev();
                         $_SESSION['aNum'] = $aNum;
                         ?>                        
                     </tbody>

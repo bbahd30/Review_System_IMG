@@ -124,8 +124,6 @@ abstract class tableManager extends databaseConnection
         $presentLastIndex = $object->findLastIndex($object->getTable(), $object->getIndex());
     
         $object->delete($object->getTable(), $object->getUpdateCondition(), $this->getArrValues());
-
-        if(isset($_POST[$index])){unset($_POST[$index]);}
     
         if ($index != $presentLastIndex)
         {

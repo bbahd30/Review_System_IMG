@@ -17,7 +17,7 @@ class studentManager extends tableManager
     }
 
     // for showing students
-    public function show()
+    public function showStudents()
     {
         $stmt = $this->conn->prepare("SELECT Student_ID, Name, Username FROM STUDENTS;");
         $stmt->execute();

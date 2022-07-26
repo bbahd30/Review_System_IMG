@@ -31,6 +31,21 @@ if(isset($_POST['logout']))
 
 <?php
 
+if(isset($_POST['delete']))
+{
+    if(isset($_POST['reqID']))
+    {
+        require_once '../PHP/requestManager.php';
+        $reqID = $_POST['reqID'];
+        $reqManager = new requestManager();
+        
+        $reqManager->setReqIDValues($reqID);
+        $reqManager->delete($reqManager->getTable(), $reqManager->getReqIDCondition(), $reqManager->getArrValues());
+    }
+    header('Location: ../PHP/StudentDashboard.php', true, 303);
+    exit;
+}
+
 if(isset($_POST['request']) && isset($_POST['aID']))
 {
     require_once '../PHP/requestManager.php';

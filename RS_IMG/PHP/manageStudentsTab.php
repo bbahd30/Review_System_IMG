@@ -68,7 +68,7 @@ if(!isset($_POST['submitted']))
                         </thead>
                         <tbody>
                             <?php
-                            $sNum = $sManager->show();
+                            $sNum = $sManager->showStudents();
                             $_SESSION['sNum'] = $sNum;
                             ?>                        
                         </tbody>

@@ -18,13 +18,13 @@ class reviewer extends member
     {
         parent::__construct();
     }
-    public function show()
+    public function showAssigntoRev()
     {
         $stmt = $this->conn->prepare("SELECT * FROM ASSIGNMENTS;");
         $stmt->execute();
         if($stmt->rowCount() == 0)
         {
-            echo("No Students Added.");
+            echo("No Assignments Added.");
         }
         else
         {

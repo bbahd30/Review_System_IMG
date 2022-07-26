@@ -7,18 +7,31 @@ if(!isset($_SESSION))
 }
 class requestManager extends tableManager
 {
+    public $reqIDCondition = "reqID = :reqID";
+
     public function __construct()
     {
         parent::__construct();
-        $this->setIndex("Student_ID");
+        $this->setIndex("reqID");
         $this->setTable("REQUESTS");
         $this->setColumns("Student_ID, IternNo , aID");
         $this->setValues(":Student_ID, :IternNo , :aID");
         $this->setUpdateCondition("Student_ID = :Student_ID AND aID = :aID");
-        $this->setColPair("IternNo = :IternNo");
-
+        $this->setColPair("IternNo = :IternNo"); 
     }
-
+    public function getReqIDCondition()
+    {
+        return $this->reqIDCondition;
+    }
+    
+    public function setReqIDValues($reqID)
+    {
+        $this->arrValues = array
+        (
+            ":reqID" => $reqID
+        );
+    }
+ 
     public function setArrValuesMatch($aID)
     {
         $this->arrValues = array
@@ -95,7 +108,7 @@ class requestManager extends tableManager
             return $this->rowDataFetch($this->getUpdateCondition(), $this->getArrValues(), $this->getTable());
         }
     }
-    public function show()
+    public function showAssign()
     {
         $stmt = $this->conn->prepare("SELECT * FROM ASSIGNMENTS;");
         $stmt->execute();
@@ -133,6 +146,51 @@ class requestManager extends tableManager
                         </div>
                     </td> 
                 </tr>";
+                    echo($newRow);
+            }
+        }
+        return $stmt->rowCount();
+    }
+
+    public function showRequests()
+    {
+        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, ASSIGNMENTS.aID ,reqID, aName, IternNo, aDeadline FROM REQUESTS JOIN ASSIGNMENTS ON ASSIGNMENTS.aID = REQUESTS.aID JOIN STUDENTS ON STUDENTS.Student_ID = REQUESTS.Student_ID WHERE STUDENTS.Student_ID = :Student_ID;");
+
+        $stmt->execute(array(":Student_ID" => $_SESSION['member_ID']));
+
+        if($stmt->rowCount() == 0)
+        {
+            echo("No Requests Made.");
+        }
+        else
+        {
+            while($rows = $stmt->fetch(PDO::FETCH_ASSOC))
+            {
+                $newRow = 
+                "
+                <tr>
+                <td>" . $rows['SNo'] . "</td>
+                        <td>" . $rows['aName'] . "</td>
+                        <td>" . $rows['IternNo'] . "</td>
+                        <td>" . $rows['aDeadline'] . "</td>
+                        <td class='actionsCol'>
+
+                            <div class='actions' id='view'>
+                                <a href='assignProfile.php?reqID=" . $rows['reqID'] . "'>View</a>
+                            </div>
+
+                            <div class='actions' id='Delete'>
+                                <form action='../PHP/StudentDashboard.php' method='post'>
+                                    <input type='text' hidden name='delete' value='delete' readonly required>
+                                    <input type='text' hidden name='reqID' value='" . $rows['reqID'] . "' readonly required>
+                                    <button type='submit' class='actionBtn'>
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </td> 
+                    </tr>
+                    ";
                     echo($newRow);
             }
         }

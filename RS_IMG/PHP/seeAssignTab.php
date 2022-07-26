@@ -1,9 +1,7 @@
 <?php
-require_once '../PHP/assignments.php';
 require_once '../PHP/requestManager.php';
 
 $reqManager= new requestManager();
-$aObj = new assignment();
 
 ?>
 <div class="parts" id="seeAssign">
@@ -24,7 +22,7 @@ $aObj = new assignment();
                 </thead>
                 <tbody>
                     <?php
-                    $aNum = $reqManager->show();
+                    $aNum = $reqManager->showAssign();
                     $_SESSION['aNum'] = $aNum;
                     ?>                        
                 </tbody>

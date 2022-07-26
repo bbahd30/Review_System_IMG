@@ -1,3 +1,12 @@
+<?php
+require_once '../PHP/requestManager.php';
+
+if(!isset($_SESSION))
+{
+    session_start();
+}
+$reqManager = new requestManager();
+?>
 <div class="parts" id="requests">
     <div class="uniTable">
         <div class="head">
@@ -9,14 +18,14 @@
                     <tr>
                         <th>S.No.</th>
                         <th>Name</th>
-                        <th>Description Link</th>
+                        <th>Iteration Number</th>
                         <th>Deadline</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $aNum = $rev->show();
+                    $aNum = $reqManager->showRequests();
                     $_SESSION['aNum'] = $aNum;
                     ?>                        
                 </tbody>
