@@ -35,7 +35,8 @@ class reviewer extends member
                 <tr>
                 <td>" . $rows['aID'] . "</td>
                         <td>" . $rows['aName'] . "</td>
-                        <td>" . $rows['aDescLink'] . "</td>
+                        <td> 
+                            <a href='" . $rows['aDescLink'] . "'>" . $rows['aDescLink'] . "</a> </td>
                         <td>" . $rows['aDeadline'] . "</td>
                         <td class='actionsCol'>
                         <div class='actions' id='view'>
@@ -64,5 +65,55 @@ class reviewer extends member
         return $stmt->rowCount();
     }
 
+    public function showRequestToRev()
+    {
+        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, ASSIGNMENTS.aID ,reqID , Name, aName, IternNo, STUDENTS.Student_ID, aDeadline FROM 
+        REQUESTS 
+        JOIN ASSIGNMENTS ON ASSIGNMENTS.aID = REQUESTS.aID JOIN STUDENTS ON STUDENTS.Student_ID = REQUESTS.Student_ID;");
 
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0)
+        {
+            echo("No Requests Made.");
+        }
+        else
+        {
+            while($rows = $stmt->fetch(PDO::FETCH_ASSOC))
+            {
+                $newRow = 
+                "
+                <tr>
+                    <td>" . $rows['SNo'] . "</td>
+                    <td>" . $rows['Name'] . "</td>
+                    <td>" . $rows['aName'] . "</td>
+                    <td>" . $rows['IternNo'] . "</td>
+
+                    <td class='actionsCol'>
+                        <div class='actions' id='View'>
+                            <form action='../PHP/manageRequestProfile.php' method='post'>
+                                <input type='text' name='aID' required hidden readonly value = " . $rows['aID'] . ">
+                                <input type='text' name='reqID' required hidden readonly value = " . $rows['reqID'] . ">
+                                <input type='submit' class='actionBtnRev'   id='viewRequest' value='View'>
+                            </form>
+                        </div>
+                    </td> 
+                </tr>
+                    ";
+                    echo($newRow);
+            }
+        }
+        return $stmt->rowCount();
+    }
+
+    // public function delete()
+    // {
+    //     $passN = password_hash("123", PASSWORD_DEFAULT);
+    //     echo($passN);
+    //     $stmt = $this->conn->prepare("UPDATE REVIEWERS SET Password = $passN where Reviewer_ID = 1");
+    // }
 }
+
+// $rev = new Reviewer();
+// $rev->delete();
+

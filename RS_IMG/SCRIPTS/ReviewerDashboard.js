@@ -2,6 +2,7 @@ var tabName = "";
 var assign = document.getElementById("assign");
 var adder = document.getElementById("adder");
 var dash = document.getElementById("dash");
+var reviews = document.getElementById("reviews");
 var mainContainer = document.querySelector(".mainContainer");
 
 
@@ -38,14 +39,28 @@ tabChanger = (idGiven, tabNameGiven) =>
 {
     idGiven.addEventListener("click",() =>
     {
+        document.querySelectorAll(".active").forEach
+        (
+            function(id)
+            {
+                id.classList.remove("active");
+            }
+        )
         if(tabName != tabNameGiven)
         {
             tabName = tabNameGiven;
             tabOpener(tabName);
         }
+        idGiven.classList.add("active");
 
     });
 }
 tabChanger(assign, "manageAssign");
 tabChanger(adder, "manageStudents");
 tabChanger(dash, "rDashboard");
+tabChanger(reviews, "reviewReq")
+
+
+
+
+

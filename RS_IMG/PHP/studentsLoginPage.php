@@ -85,7 +85,7 @@ $_SESSION['credWrong'] = false;
                         </div>
                         <div class="inp">
                             <label>
-                                <input required type="text" name="pass" id="pass" placeholder = "Password" class="fieldInp">
+                                <input required type="password" name="pass" id="pass" placeholder = "Password" class="fieldInp">
                             </label>
                         </div>
                         <div class="error">

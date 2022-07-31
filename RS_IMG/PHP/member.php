@@ -117,7 +117,6 @@ class member extends databaseConnection
             }
             else
             {
-                echo("<html><script>alert('hello2')</script></html");
                 // MAY BE SOME OTHER USER USING THE SAME PC SO COOKIES OF OTHER PRESENT, SO CAN'T DESTROY COOKIES AS NEEDED FOR THE PREV USER, 
                 // uniqToEnsureThatCookiesAreNotHis
 
@@ -153,13 +152,10 @@ class member extends databaseConnection
     
     public function failed ($type)
     {
-        echo($_SESSION['credWrong']);
+        // echo($_SESSION['credWrong']);
 
         $opt = (mySession::findSessVar('credWrong', 'true') == 1) ? "?invalid=1" : "";
-        echo("<html><script>alert('HELLO')</script></html");
         
-
-        echo("hello");
 
         if ($type == 1)
         {

@@ -1,15 +1,9 @@
 <?php
-require_once '../PHP/requestManager.php';
+require_once '../PHP/reviewers.php';
 
-if(!isset($_SESSION))
-{
-    session_start();
-}
-$reqManager = new requestManager();
-
+$rev = new reviewer();
 ?>
-
-<div class="parts" id="requests">
+<div class="parts" id="reviewReq">
     <div class="uniTable">
         <div class="head">
             <h3>Requests Made Till Now</h3>
@@ -19,19 +13,20 @@ $reqManager = new requestManager();
                 <thead>
                     <tr>
                         <th>S.No.</th>
-                        <th>Name</th>
+                        <th>Request By</th>
+                        <th>Assignment</th>
                         <th>Iteration Number</th>
-                        <th>Deadline</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $aNum = $reqManager->showRequests();
+                    $aNum = $rev->showRequestToRev();
                     $_SESSION['aNum'] = $aNum;
                     ?>                        
                 </tbody>
             </table>
+
         </div>
-    </div>
+        </div>
 </div>

@@ -34,11 +34,19 @@ tabChanger = (idGiven, tabNameGiven) =>
 {
     idGiven.addEventListener("click",() =>
     {
+        document.querySelectorAll(".active").forEach
+        (
+            function(id)
+            {
+                id.classList.remove("active");
+            }
+        )
         if(tabName != tabNameGiven)
         {
             tabName = tabNameGiven;
             tabOpener(tabName);
         }
+        idGiven.classList.add("active");
 
     });
 }

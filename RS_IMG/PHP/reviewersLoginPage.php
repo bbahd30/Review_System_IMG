@@ -12,10 +12,6 @@ if (!isset($_SESSION))
     session_start();
 }
 
-// if(isset($_SESSION['die']))
-// {
-//     echo($_SESSION['die']);
-// }
 if (isset($_SESSION['die']))
 {
     if (!$_SESSION['die'])
@@ -92,7 +88,7 @@ $_SESSION['credWrong'] = false;
                         </div>
                         <div class="inp">
                             <label>
-                                <input required type="text" name="pass" id="pass" placeholder = "Password" class="fieldInp">
+                                <input required type="password" name="pass" id="pass" placeholder = "Password" class="fieldInp">
                             </label>
                         </div>
                         <div class="error">

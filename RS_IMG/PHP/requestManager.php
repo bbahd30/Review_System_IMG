@@ -8,7 +8,7 @@ if(!isset($_SESSION))
 class requestManager extends tableManager
 {
     public $reqIDCondition = "reqID = :reqID";
-
+    public $joinUpdateCondition = "STUDENTS.Student_ID = :Student_ID AND ASSIGNMENTS.aID = :aID";
     public function __construct()
     {
         parent::__construct();
@@ -23,7 +23,10 @@ class requestManager extends tableManager
     {
         return $this->reqIDCondition;
     }
-    
+    public function getJoinUpdateCondition()
+    {
+        return $this->joinUpdateCondition;
+    }
     public function setReqIDValues($reqID)
     {
         $this->arrValues = array
@@ -132,12 +135,12 @@ class requestManager extends tableManager
                     <td>" . $rows['aDescLink'] . "</td>
                     <td>" . $rows['aDeadline'] . "</td>
                     <td class='actionsCol'>
-                    <div class='actions' id='view'>
-                    <a href='assignProfile.php?aID=" . $rows['aID'] . "'>View</a>
-                    </div>
+                        <div class='actions' id='view'>
+                            <a href='assignProfile.php?aID=" . $rows['aID'] . "'>View</a>
+                        </div>
                         <div class='actions' id='request'>
                             <form action='../PHP/StudentDashboard.php' method='post'>
-                                <input type='text' hidden name='request' value='".$reqValue. "'readonly required>
+                                <input type='text' hidden name='request' value='".$reqValue.   "'readonly required>
                                 <input type='text' hidden name='aID' value='" . $rows['aID'] . "'readonly required>
                                 <button type='request' class='actionBtn'>
                                 " . $reqStatus . "
@@ -175,8 +178,12 @@ class requestManager extends tableManager
                         <td>" . $rows['aDeadline'] . "</td>
                         <td class='actionsCol'>
 
-                            <div class='actions' id='view'>
-                                <a href='assignProfile.php?reqID=" . $rows['reqID'] . "'>View</a>
+                            <div class='actions' id='View'>
+                                <form action='../PHP/viewRequestProfile.php' method='post'>
+                                    <input type='text' name='aID' required hidden readonly value = " . $rows['aID']. ">
+                                    <input type='text' name='reqID' required hidden readonly value = " . $rows['reqID'] . ">
+                                    <input type='submit' class='actionBtnRev'   id='viewRequest' value='View'>
+                                </form>
                             </div>
 
                             <div class='actions' id='Delete'>
@@ -195,5 +202,16 @@ class requestManager extends tableManager
             }
         }
         return $stmt->rowCount();
+    }
+
+
+
+    public function findIternNum($reqID)
+    {
+        $stmt = $this->conn->prepare("SELECT IternNo FROM REQUESTS WHERE $this->getReqIDCondition();");
+        $this->setReqIDValues($reqID);
+        $stmt->execute($this->getArrValues());
+        $IternNum = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $IternNum;
     }
 }

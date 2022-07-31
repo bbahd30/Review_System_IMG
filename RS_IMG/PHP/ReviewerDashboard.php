@@ -1,12 +1,13 @@
 <?php
-require_once '../PHP/reviewers.php';
 require_once '../PHP/studentManager.php';
 require_once '../PHP/assignments.php';
+require_once '../PHP/requestManager.php';
 
 if(!isset($_SESSION))
 {
     session_start();
 }
+$_SESSION['type'] = "REVIEWERS";
 
 if(isset($_POST['logout']))
 {
@@ -23,6 +24,7 @@ if(isset($_POST['logout']))
         {
             // CHECK STATUS
             <?php
+                require_once '../PHP/reviewers.php';
                 $rev = new reviewer();
                 $rev->statChecker($rev->conn, $rev->getTable(), $rev->getType());
             ?>
@@ -99,11 +101,10 @@ if (isset($_SESSION['stat']))
         </div>
         <div id="linksMenu" class= "quickLinksDiv">
             <span class="menu">Menu</span>
-                <div class = "links" id="dash">Dashboard</div>
+                <div class = "links active" id="dash">Dashboard</div>
                 <div class = "links" id="adder">Manage Students</div>
                 <div class = "links" id="assign">Manage Assignments</div>
-                <div class = "links">Review Requests</div>
-                <div class = "links">Review Students Profile</div>
+                <div class = "links" id="reviews">Review Requests</div>
                 <form action="" method="post">
                     <input type="text" name="logout" readonly value="logout" hidden>
                     <button type = "submit">
@@ -161,7 +162,10 @@ if (isset($_SESSION['stat']))
                                 Total Requests
                             </div>
                             <div class="data">
-                                2
+                                <?php
+                                    $reqManager = new requestManager();
+                                    echo($reqManager->findEntriesNum($reqManager->getTable()));
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -222,7 +226,6 @@ if (isset($_SESSION['stat']))
 
 </body>
 <script src="../SCRIPTS/ReviewerDashboard.js"></script>
-
 </html>
 
 <?php
@@ -231,6 +234,6 @@ if (isset($_SESSION['stat']))
 else
 {
     $_SESSION['die'] = true;
-    header("location: ../PHP/reviewerLoginPage.php");
+    header("location: ../PHP/reviewersLoginPage.php");
 }
 ?>

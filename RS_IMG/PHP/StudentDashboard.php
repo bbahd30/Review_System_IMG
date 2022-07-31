@@ -7,6 +7,7 @@ if(!isset($_SESSION))
 {
     session_start();
 }
+$_SESSION['type'] = "STUDENTS";
 
 if(isset($_POST['logout']))
 {
@@ -39,8 +40,15 @@ if(isset($_POST['delete']))
         $reqID = $_POST['reqID'];
         $reqManager = new requestManager();
         
-        $reqManager->setReqIDValues($reqID);
-        $reqManager->delete($reqManager->getTable(), $reqManager->getReqIDCondition(), $reqManager->getArrValues());
+        try
+        {
+            $reqManager->setReqIDValues($reqID);
+            $reqManager->delete($reqManager->getTable(), $reqManager->getReqIDCondition(), $reqManager->getArrValues());
+        }
+        catch(PDOException $e)
+        {
+            echo("<html><script>alert('Unable to remove the request as it is now under review'" . $e->getMessage() . ")</script></html>");
+        }
     }
     header('Location: ../PHP/StudentDashboard.php', true, 303);
     exit;
@@ -50,7 +58,6 @@ if(isset($_POST['request']) && isset($_POST['aID']))
 {
     require_once '../PHP/requestManager.php';
     $reqManager = new requestManager();
-    echo("<html><script>alert('req clicked')</script></html>");
 
     $aID = $_POST['aID'];
     $reqValue = $_POST['request'];

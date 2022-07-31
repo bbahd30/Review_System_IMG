@@ -96,6 +96,13 @@ abstract class tableManager extends databaseConnection
         $stmt->execute($arrValues);
     }
 
+    public function findEntriesNum ($table)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM $table;");
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
     public function findLastIndex ($table, $index)
     {
         $stmt = $this->conn->prepare("SELECT MAX($index) FROM $table;");

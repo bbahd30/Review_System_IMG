@@ -38,7 +38,7 @@ body
     z-index: 3;
     display: flex;
     flex-direction: column;
-    width: 302px;
+    width: 320px;
     background-color: var(--sidebar);
     height: calc(100% - 50px);
     border-top-right-radius: 2px;
@@ -89,7 +89,7 @@ body
     display: flex;
     flex-direction: column;
     width: calc(100% - 380px);
-    padding: 0 50px;
+    padding: 0 30px 0 50px;
 }
 .nav
 {
@@ -208,6 +208,11 @@ body
     background-color: var(--btnInput);
     padding-left: 30px;
 }
+a 
+{
+    text-decoration: none;
+    
+}
 button
 {
     border: none;
@@ -253,7 +258,7 @@ thead
 .actionsCol
 {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 .actions
 {
@@ -280,14 +285,22 @@ h3
     display: flex;
     justify-content: flex-end;
 }
-.actionBtn
+.actionBtn, .actionBtnRev, #fixMeet
 {
     font-size: 22px;
     vertical-align: middle;
-    background-color: #f73b3b;
     padding: 10px;
     border-radius: 10px;
-    margin-top: 24px;
+    margin: 20px 0;
+}
+
+#comment
+{
+    display: block;
+}
+.actionBtn
+{
+    background-color: #f73b3b;
 }
 
 
@@ -295,4 +308,21 @@ h3
 {
     min-height: 100%;
     width: 100%;
+}
+
+.actionBtnRev
+{
+    background-color: var(--tab);
+    border: 1px solid #19feff;    cursor: pointer;
+}
+
+form
+{
+    margin: 0;
+}
+
+.active
+{
+    padding: 10px 0 10px 8px;
+    border-left: 10px solid var(--tab);
 }
