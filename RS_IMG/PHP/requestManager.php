@@ -123,7 +123,8 @@ class requestManager extends tableManager
         else
         {
             $member_ID = $_SESSION['member_ID'];
-            $stmt2 = $this->conn->prepare("SELECT REQUESTS.aID AS aID, Student_ID, IternNo FROM ASSIGNMENTS
+            $stmt2 = $this->conn->prepare("SELECT REQUESTS.aID AS aID, Student_ID, IternNo FROM 
+            ASSIGNMENTS
             JOIN REQUESTS ON ASSIGNMENTS.aID = REQUESTS.aID WHERE Student_ID = $member_ID AND REQUESTS.aID = :aID;");
             
             
@@ -133,10 +134,15 @@ class requestManager extends tableManager
                 $stmt2->execute(array(":aID" => $rows['aID']));
                 $currentIternNum = $stmt2->fetch(PDO::FETCH_ASSOC);
                 
+                
                 $reqStatus = (!$this->isPresentInRequest($rows['aID'])) ? "Request" : "Requested";
                 $reqValue = ($reqStatus == "Requested") ? 1 : 0;
                 
-                $nStmt = $this->conn->prepare("SELECT aID". $rows['aID']. " AS aID FROM COMPLETED WHERE member_ID = ". $currentIternNum['Student_ID']. ";");
+
+                // $nStmt = $this->conn->prepare("SELECT aID". $rows['aID']. " AS aID FROM COMPLETED WHERE member_ID = ". $member_ID. ";");
+
+                $nStmt = $this->conn->prepare("SELECT sID". $member_ID ." AS aIDStat FROM COMPLETE WHERE assignID = 'aID". $rows['aID'] . "';");
+
                 $nStmt->execute();
                 $info = $nStmt->fetch(PDO::FETCH_ASSOC);
 
@@ -152,12 +158,12 @@ class requestManager extends tableManager
                 {
                     if($currentIternNum['IternNo'] != 0)
                     {
-                        $iternStatus = "<button type='request' id='itern' class='actionBtn'>Under Review</button>";
+                        $iternStatus = "<button id='itern' class='actionBtn'>Under Review</button>";
                     }
 
-                    if($info['aID'] == 1)
+                    if($info['aIDStat'] == 1)
                     {
-                        $iternStatus = "<button type='request' id='passed' class='actionBtn'>Approved</button>";
+                        $iternStatus = "<button id='passed' class='actionBtn'>Approved</button>";
                     }
                 }
                 
@@ -168,7 +174,7 @@ class requestManager extends tableManager
                     <td>" . $rows['aID'] . "</td>
                     <td>" . $rows['aName'] . "</td>
                     <td> 
-                        <a href='" . $rows['aDescLink'] . "'>" . $rows['aName'] . "'s AssignmentLink</a> 
+                        <a href='" . $rows['aDescLink'] . "' id='link'>" . $rows['aName'] . "'s Assignment Link</a> 
                     </td>
                        
                     <td>" . $rows['aDeadline'] . "</td>
@@ -191,7 +197,7 @@ class requestManager extends tableManager
 
     public function showRequests()
     {
-        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, IternNo, ASSIGNMENTS.aID ,reqID, aName, IternNo, aDeadline FROM 
+        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, IternNo, ASSIGNMENTS.aID AS aID,reqID, aName, IternNo, aDeadline FROM 
         REQUESTS 
         JOIN ASSIGNMENTS ON ASSIGNMENTS.aID = REQUESTS.aID 
         JOIN STUDENTS ON STUDENTS.Student_ID = REQUESTS.Student_ID 
@@ -210,6 +216,11 @@ class requestManager extends tableManager
             
             while($rows = $stmt->fetch(PDO::FETCH_ASSOC))
             {
+                $nStmt = $this->conn->prepare("SELECT sID". $member_ID ." AS aIDStat FROM COMPLETE WHERE assignID = 'aID". $rows['aID'] . "';");
+
+                $nStmt->execute();
+                $info = $nStmt->fetch(PDO::FETCH_ASSOC);
+
                 $iternStatus = "<div class='actions' id='Delete'>
                                     <form action='../PHP/StudentDashboard.php' method='post'>
                                         <input type='text' hidden name='delete' value='delete' readonly required>
@@ -224,28 +235,30 @@ class requestManager extends tableManager
                 {
                     $iternStatus = "<button type='request' id='itern' class='actionBtn'>Under Review</button>";
                 }
-                
-                $newRow = 
-                "
-                <tr>
-                <td>" . $rows['SNo'] . "</td>
-                        <td>" . $rows['aName'] . "</td>
-                        <td>" . $rows['IternNo'] . "</td>
-                        <td>" . $rows['aDeadline'] . "</td>
-                        <td class='actionsCol'>
+                if($info['aIDStat'] != 1)
+                {
+                    $newRow = 
+                    "
+                    <tr>
+                    <td>" . $rows['SNo'] . "</td>
+                            <td>" . $rows['aName'] . "</td>
+                            <td>" . $rows['IternNo'] . "</td>
+                            <td>" . $rows['aDeadline'] . "</td>
+                            <td class='actionsCol'>
 
-                            <div class='actions' id='View'>
-                                <form action='../PHP/viewRequestProfile.php' method='post'>
-                                    <input type='text' name='aID' required hidden readonly value = " . $rows['aID']. ">
-                                    <input type='text' name='reqID' required hidden readonly value = " . $rows['reqID'] . ">
-                                    <input type='submit' class='actionBtnRev'   id='viewRequest' value='View'>
-                                </form>
-                            </div> "
-                            . $iternStatus ."
-                        </td> 
-                    </tr>
-                    ";
-                    echo($newRow);
+                                <div class='actions' id='View'>
+                                    <form action='../PHP/viewRequestProfile.php' method='post'>
+                                        <input type='text' name='aID' required hidden readonly value = " . $rows['aID']. ">
+                                        <input type='text' name='reqID' required hidden readonly value = " . $rows['reqID'] . ">
+                                        <input type='submit' class='actionBtnRev'   id='viewRequest' value='View'>
+                                    </form>
+                                </div> "
+                                . $iternStatus ."
+                            </td> 
+                        </tr>
+                        ";
+                        echo($newRow);
+                }
             }
         }
         return $stmt->rowCount();

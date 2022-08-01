@@ -42,7 +42,6 @@ document.querySelector("#submitBtn").addEventListener("click", () =>
             if (obj.status == 200)
             {
                 // show that data updated
-                window.location.href = '../PHP/ReviewerDashboard.php';
             }
         }
 
@@ -62,7 +61,6 @@ document.querySelector("#submitBtn").addEventListener("click", () =>
             if (obj2.status == 200)
             {
                 // show that data updated
-                window.location.href = '../PHP/ReviewerDashboard.php';
             }
         }
 

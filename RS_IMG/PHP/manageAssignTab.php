@@ -21,8 +21,12 @@ if(!empty($_POST))
             $aObj->adder( $aObj->getColumns(), $aObj->getValues(), $aObj->getArrValues(), $aObj->getTable());
 
             $last = $aObj->findLastIndex($aObj->getTable(), $aObj->getIndex());
-            $name = "aID".$last;
-            $aObj->addAColumn($name, "COMPLETED", "INT(1)");
+           
+            $name = "aID".$aID;
+            $stmt2= $aObj->conn->prepare("INSERT INTO COMPLETE (assignID) VALUES ('". $name. "');");
+            $stmt2->execute();
+
+            // $aObj->addAColumn($name, "COMPLETED", "INT(1)");
             
             $_SESSION['added'] = 1;
         }

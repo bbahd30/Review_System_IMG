@@ -65,7 +65,7 @@ class reviewer extends member
 
     public function showRequestToRev()
     {
-        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, ASSIGNMENTS.aID ,reqID , Name, aName, IternNo, STUDENTS.Student_ID, aDeadline FROM 
+        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, ASSIGNMENTS.aID as aID,reqID , Name, aName, IternNo, STUDENTS.Student_ID as sID, aDeadline FROM 
         REQUESTS 
         JOIN ASSIGNMENTS ON ASSIGNMENTS.aID = REQUESTS.aID JOIN STUDENTS ON STUDENTS.Student_ID = REQUESTS.Student_ID;");
 
@@ -79,6 +79,20 @@ class reviewer extends member
         {
             while($rows = $stmt->fetch(PDO::FETCH_ASSOC))
             {
+                $nStmt = $this->conn->prepare("SELECT sID". $rows['sID'] ." AS aIDStat FROM COMPLETE WHERE assignID = 'aID". $rows['aID'] . "';");
+
+                $nStmt->execute();
+                $info = $nStmt->fetch(PDO::FETCH_ASSOC);
+
+                if($info['aIDStat'] == 1)
+                {
+                    $sumbitStat = "<input class='actionBtnRev passedInp'   id='passed' value='Approved' readonly>";
+                }
+                else
+                {
+                    $sumbitStat = "";
+                }
+
                 $newRow = 
                 "
                 <tr>
@@ -93,6 +107,7 @@ class reviewer extends member
                                 <input type='text' name='aID' required hidden readonly value = " . $rows['aID'] . ">
                                 <input type='text' name='reqID' required hidden readonly value = " . $rows['reqID'] . ">
                                 <input type='submit' class='actionBtnRev'   id='viewRequest' value='View'>
+                                ". $sumbitStat ."
                             </form>
                         </div>
                     </td> 

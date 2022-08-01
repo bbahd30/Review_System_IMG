@@ -24,8 +24,9 @@ if(!empty($_POST))
         {
             $sManager->adder( $sManager->getColumns(), $sManager->getValues(), $sManager->getArrValues(), $sManager->getTable());
             
-            $stmt = $sManager->conn->prepare("INSERT INTO COMPLETED (member_ID) VALUES (". $sID . ")");
-            $stmt->execute();
+            // $stmt = $sManager->conn->prepare("INSERT INTO COMPLETED (member_ID) VALUES (". $sID . ")");
+            $name = "sID" . $sID;
+            $stmt = $sManager->addAColumn($name, "COMPLETE", "INT(1)");
             $_SESSION['added'] = 1;
         }
     }

@@ -142,7 +142,7 @@ if (isset($_SESSION['stat']))
                 <div class = "links active" id="dash">Dashboard</div>
                 <div class = "links" id="assign">See Assignments</div>
                 <div class = "links" id="requests">Request for Review</div>
-                <div class = "links">My Profile</div>
+                
                 <form action="" method="post">
                     <input type="text" name="logout" readonly value="logout" hidden>
                     <button type = "submit">
@@ -191,48 +191,17 @@ if (isset($_SESSION['stat']))
                             <div class="data">
                                 <?php
                                     $sManager = new studentManager();
-                                    // echo($sManager->findLastIndex($sManager->getTable(),    $sManager->getIndex()));
-                                    // index of complete table
+                                    $stmt = $sManager->conn->prepare("select count(*) as TOTAL_DONE FROM COMPLETE WHERE sID". $_SESSION['member_ID']." = 1 GROUP BY sID" . $_SESSION['member_ID'].";");
+                                    
+                                    $stmt->execute();
+                                    $info = $stmt->fetch(PDO::FETCH_ASSOC);
+                                    echo($info['TOTAL_DONE']);
                                 ?>
                             </div>
                         </div>
-                        <!-- <div id="requests" class="dataBoxes">
-                            <div class="head">
-                                Total Requests
-                            </div>
-                            <div class="data">
-                                2
-                            </div>
-                        </div> -->
+       
                     </div>
-                    <!-- <div class="reviewSection">
-                        <div class="head">
-                            Students
-                        </div>
-                        <div class="studentsInLine">
-                            <div class="dataStudent"></div>
-                            <div class="profile"></div>   
-                            <span class="fixed">Review Requested </ span>
-                        </div>
-                        <div class="studentsInLine">
-                            <div class="dataStudent"></div>
-                            <div class="profile"></div>   
-                            <span class="fixed">Review Requested </ span>
-                        </div>
-                        <div class="studentsInLine">
-                            <div class="dataStudent"></div>
-                            <div class="profile"></div>   
-                            <span class="fixed">Review Requested</  span>
-                        </div>
-                
-                        <br>
-                        Other Students
-                        <div class="profiles">
-                            <div class="dpStudents"></div>
-                            <div class="dpStudents"></div>
-                            <div class="dpStudents"></div>
-                        </div>
-                    </div> -->
+                    
                 </div>
             
             </div>

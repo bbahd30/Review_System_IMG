@@ -45,7 +45,9 @@ if(isset($_POST['delete']))
         // ALSO NEED TO REMOVE THE COLUMN IN COMPLETED TABLE CREATED FOR THE ASSIGNMENT AS NO FOREIGN KEY
 
         $name = "aID". $aID;
-        $aObj->removeAColumn($name, "COMPLETED"); 
+        $stmt = $aObj->conn->prepare("DELETE FROM COMPLETE WHERE assignID = '". $name ."';");
+        $stmt->execute();
+        // $aObj->removeAColumn($name, "COMPLETED"); 
         
         
     }
@@ -56,6 +58,8 @@ if(isset($_POST['delete']))
         $sID = $_POST['sID'];
         $sManager = new studentManager();
         $sManager->deleteValidation($sID, $sManager);
+        $name = "sID". $sID;
+        $sManager->removeAColumn($name, "COMPLETE"); 
 
         // $stmt = $sManager->conn->prepare("DELETE FROM COMPLETED WHERE member_ID = ". $sID . ");");
         // $stmt->execute();
@@ -178,7 +182,7 @@ if (isset($_SESSION['stat']))
                             </div>
                         </div>
                     </div>
-                    <div class="reviewSection">
+                    <!-- <div class="reviewSection">
                         <div class="head">
                             Students
                         </div>
@@ -205,21 +209,21 @@ if (isset($_SESSION['stat']))
                             <div class="dpStudents"></div>
                             <div class="dpStudents"></div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             
             </div>
 
             <div class="rightPanel">
                     <div class="headPurpose">
-                        Schedule a Meet with other Reviewers
+                        <!-- Schedule a Meet with other Reviewers -->
                     </div>
                     <div class="image">
                         <img src="" alt="">
                     </div>
                     <div class="otherReviewers">
                         <div class="reviewers">
-                            Mrinal +
+                           
                             <!-- Need to fetch from the reviewers array -->
                         </div>
                         <div class="reviewers"></div>

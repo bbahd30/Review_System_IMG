@@ -55,8 +55,10 @@ if(isset($_POST['stat']))
         $stmt->execute(array(":reqID" => $reqID));
         $assignInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $updateStmt = $reqManager->conn->prepare("UPDATE COMPLETED SET aID". $assignInfo['aID']. "= 1 WHERE member_ID = ". $assignInfo['Student_ID']. ";");
-        echo("UPDATE COMPLETED SET aID". $assignInfo['aID']. "= 1 WHERE member_ID = ". $assignInfo['Student_ID']. ";");
+        // $updateStmt = $reqManager->conn->prepare("UPDATE COMPLETED SET aID". $assignInfo['aID']. "= 1 WHERE member_ID = ". $assignInfo['Student_ID']. ";");
+        // echo("UPDATE COMPLETED SET aID". $assignInfo['aID']. "= 1 WHERE member_ID = ". $assignInfo['Student_ID']. ";");
+
+        $updateStmt = $reqManager->conn->prepare("UPDATE COMPLETE SET sID". $assignInfo['Student_ID']. "= 1 WHERE assignID = 'aID". $assignInfo['aID']. "';");
         $updateStmt->execute();
 
     }
