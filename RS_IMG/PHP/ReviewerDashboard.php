@@ -42,6 +42,12 @@ if(isset($_POST['delete']))
         $aID = $_POST['aID'];
         $aObj = new assignment();
         $aObj->deleteValidation($aID, $aObj);
+        // ALSO NEED TO REMOVE THE COLUMN IN COMPLETED TABLE CREATED FOR THE ASSIGNMENT AS NO FOREIGN KEY
+
+        $name = "aID". $aID;
+        $aObj->removeAColumn($name, "COMPLETED"); 
+        
+        
     }
 
     if(isset($_POST['sID']))
@@ -50,6 +56,9 @@ if(isset($_POST['delete']))
         $sID = $_POST['sID'];
         $sManager = new studentManager();
         $sManager->deleteValidation($sID, $sManager);
+
+        // $stmt = $sManager->conn->prepare("DELETE FROM COMPLETED WHERE member_ID = ". $sID . ");");
+        // $stmt->execute();
     }
     header('Location: ../PHP/ReviewerDashboard.php', true, 303);
     exit;

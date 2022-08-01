@@ -1,6 +1,7 @@
 <?php
 
 require_once '../PHP/tableManager.php';
+
 if(!isset($_SESSION))
 {
     session_start();
@@ -117,22 +118,59 @@ class requestManager extends tableManager
         $stmt->execute();
         if($stmt->rowCount() == 0)
         {
-            echo("NO Assignment Added.");
+            echo("No Assignment Added.");
         }
         else
         {
+            $member_ID = $_SESSION['member_ID'];
+            $stmt2 = $this->conn->prepare("SELECT REQUESTS.aID AS aID, Student_ID, IternNo FROM ASSIGNMENTS
+            JOIN REQUESTS ON ASSIGNMENTS.aID = REQUESTS.aID WHERE Student_ID = $member_ID AND REQUESTS.aID = :aID;");
+            
+            
             while($rows = $stmt->fetch(PDO::FETCH_ASSOC))
             {
+                
+                $stmt2->execute(array(":aID" => $rows['aID']));
+                $currentIternNum = $stmt2->fetch(PDO::FETCH_ASSOC);
+                
                 $reqStatus = (!$this->isPresentInRequest($rows['aID'])) ? "Request" : "Requested";
                 $reqValue = ($reqStatus == "Requested") ? 1 : 0;
-                // AS THIS GIVES 0 IF EQUAL THAT IS BOOL TRUE, GIVES FALSE
                 
+                $nStmt = $this->conn->prepare("SELECT aID". $rows['aID']. " AS aID FROM COMPLETED WHERE member_ID = ". $currentIternNum['Student_ID']. ";");
+                $nStmt->execute();
+                $info = $nStmt->fetch(PDO::FETCH_ASSOC);
+
+                $iternStatus = 
+                    "<input type='text' hidden name='request' value='".$reqValue. "'readonly required>
+                    <input type='text' hidden name='aID' value='" . $rows['aID'] .  "'readonly required>
+                    <button type='request' class='actionBtn'>
+                    " . $reqStatus . "
+                    </button>";
+                // AS THIS GIVES 0 IF EQUAL THAT IS BOOL TRUE, GIVES FALSE
+
+                if(isset($currentIternNum['IternNo']))
+                {
+                    if($currentIternNum['IternNo'] != 0)
+                    {
+                        $iternStatus = "<button type='request' id='itern' class='actionBtn'>Under Review</button>";
+                    }
+
+                    if($info['aID'] == 1)
+                    {
+                        $iternStatus = "<button type='request' id='passed' class='actionBtn'>Approved</button>";
+                    }
+                }
+                
+
                 $newRow = 
                 "
                 <tr>
                     <td>" . $rows['aID'] . "</td>
                     <td>" . $rows['aName'] . "</td>
-                    <td>" . $rows['aDescLink'] . "</td>
+                    <td> 
+                        <a href='" . $rows['aDescLink'] . "'>" . $rows['aName'] . "'s AssignmentLink</a> 
+                    </td>
+                       
                     <td>" . $rows['aDeadline'] . "</td>
                     <td class='actionsCol'>
                         <div class='actions' id='view'>
@@ -140,11 +178,7 @@ class requestManager extends tableManager
                         </div>
                         <div class='actions' id='request'>
                             <form action='../PHP/StudentDashboard.php' method='post'>
-                                <input type='text' hidden name='request' value='".$reqValue.   "'readonly required>
-                                <input type='text' hidden name='aID' value='" . $rows['aID'] . "'readonly required>
-                                <button type='request' class='actionBtn'>
-                                " . $reqStatus . "
-                                </button>
+                                ". $iternStatus. "
                             </form>
                         </div>
                     </td> 
@@ -157,7 +191,11 @@ class requestManager extends tableManager
 
     public function showRequests()
     {
-        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, ASSIGNMENTS.aID ,reqID, aName, IternNo, aDeadline FROM REQUESTS JOIN ASSIGNMENTS ON ASSIGNMENTS.aID = REQUESTS.aID JOIN STUDENTS ON STUDENTS.Student_ID = REQUESTS.Student_ID WHERE STUDENTS.Student_ID = :Student_ID;");
+        $stmt = $this->conn->prepare("SELECT ROW_NUMBER() OVER (ORDER BY reqID) AS SNo, IternNo, ASSIGNMENTS.aID ,reqID, aName, IternNo, aDeadline FROM 
+        REQUESTS 
+        JOIN ASSIGNMENTS ON ASSIGNMENTS.aID = REQUESTS.aID 
+        JOIN STUDENTS ON STUDENTS.Student_ID = REQUESTS.Student_ID 
+        WHERE STUDENTS.Student_ID = :Student_ID;");
 
         $stmt->execute(array(":Student_ID" => $_SESSION['member_ID']));
 
@@ -167,8 +205,26 @@ class requestManager extends tableManager
         }
         else
         {
+            $member_ID = $_SESSION['member_ID'];
+
+            
             while($rows = $stmt->fetch(PDO::FETCH_ASSOC))
             {
+                $iternStatus = "<div class='actions' id='Delete'>
+                                    <form action='../PHP/StudentDashboard.php' method='post'>
+                                        <input type='text' hidden name='delete' value='delete' readonly required>
+                                        <input type='text' hidden name='reqID' value='" . $rows['reqID'] . "' readonly  required>
+                                        <button type='submit' class='actionBtn'>
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>";
+
+                if($rows['IternNo'] != 0)
+                {
+                    $iternStatus = "<button type='request' id='itern' class='actionBtn'>Under Review</button>";
+                }
+                
                 $newRow = 
                 "
                 <tr>
@@ -184,17 +240,8 @@ class requestManager extends tableManager
                                     <input type='text' name='reqID' required hidden readonly value = " . $rows['reqID'] . ">
                                     <input type='submit' class='actionBtnRev'   id='viewRequest' value='View'>
                                 </form>
-                            </div>
-
-                            <div class='actions' id='Delete'>
-                                <form action='../PHP/StudentDashboard.php' method='post'>
-                                    <input type='text' hidden name='delete' value='delete' readonly required>
-                                    <input type='text' hidden name='reqID' value='" . $rows['reqID'] . "' readonly required>
-                                    <button type='submit' class='actionBtn'>
-                                        Remove
-                                    </button>
-                                </form>
-                            </div>
+                            </div> "
+                            . $iternStatus ."
                         </td> 
                     </tr>
                     ";

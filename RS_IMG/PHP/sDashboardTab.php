@@ -31,41 +31,6 @@ $sManager = new studentManager();
                 ?>
             </div>
         </div>
-        <!-- <div id="requests" class="dataBoxes">
-            <div class="head">
-                Total Requests
-            </div>
-            <div class="data">
-                2
-            </div>
-        </div> -->
+      
     </div>
-    <!-- <div class="reviewSection">
-        <div class="head">
-            Students
-        </div>
-        <div class="studentsInLine">
-            <div class="dataStudent"></div>
-            <div class="profile"></div>   
-            <span class="fixed">Review Requested </ span>
-        </div>
-        <div class="studentsInLine">
-            <div class="dataStudent"></div>
-            <div class="profile"></div>   
-            <span class="fixed">Review Requested </ span>
-        </div>
-        <div class="studentsInLine">
-            <div class="dataStudent"></div>
-            <div class="profile"></div>   
-            <span class="fixed">Review Requested</  span>
-        </div>
-                
-        <br>
-        Other Students
-        <div class="profiles">
-            <div class="dpStudents"></div>
-            <div class="dpStudents"></div>
-            <div class="dpStudents"></div>
-        </div>
-    </div> -->
                 </div>

@@ -28,10 +28,12 @@ showChats = () =>
 
 postComment = () =>
 {
+    var postTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
     var obj = new XMLHttpRequest();
     var newComment = document.getElementById("newComment").value;
     
-    data = "newComment=" + newComment;
+    data = "newComment=" + newComment+"&time="+postTime;
     obj.open("POST","../PHP/inserterAjax.php", true);
 
     obj.onload = function()

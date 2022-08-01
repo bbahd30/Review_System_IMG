@@ -1,6 +1,7 @@
 <?php
 require_once '../PHP/studentManager.php';
 require_once '../PHP/assignments.php';
+require_once '../PHP/requestManager.php';
 
 if(!isset($_SESSION))
 {
@@ -40,7 +41,10 @@ if(!isset($_SESSION))
                 Total Requests
             </div>
             <div class="data">
-                2
+                <?php
+                    $reqManager = new requestManager();
+                    echo($reqManager->findEntriesNum($reqManager->getTable()));
+                ?>
             </div>
         </div>
     </div>

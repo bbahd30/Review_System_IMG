@@ -12,16 +12,13 @@ RESPONSES JOIN REQUESTS ON RESPONSES.reqID = REQUESTS.reqID WHERE RESPONSES.reqI
 $stmt->execute(array(":reqID" => $reqID));
 $rowData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-echo(var_dump($_POST)); 
-
 $changesGiven = (int)count($_POST) - 2;
-echo($changesGiven);
 while($changesGiven > 0)
 {
     $arrValues2 = 
     array
     (
-        ":reqID" => $_SESSION['reqID'],
+        ":reqID" => $reqID,
         ":iternDesc" => $_POST['change'.$changesGiven],
         "Reviewer_ID" => $_SESSION['member_ID']
     );
@@ -60,7 +57,18 @@ if (isset($_SESSION['stat']))
                 <label for="iternNum">Iteration Number</label>
                 <input required type="text" name="iternNum" id="iternNum" readonly 
                 
-                value="<?php echo($rowData['IternNo']); ?>">
+                value="<?php 
+                if(isset($rowData['IternNo']))
+                {
+                    echo($rowData['IternNo']);
+                }
+                else
+                {
+                    $nStmt = $reqManager->conn->prepare("SELECT * FROM REQUESTS WHERE reqID = :reqID;");
+                    $nStmt->execute(array(":reqID" => $reqID));
+                    $info = $nStmt->fetch(PDO::FETCH_ASSOC);
+                    echo($info['IternNo']);
+                } ?>">
 
             </div>
 

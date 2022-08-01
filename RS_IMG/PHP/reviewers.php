@@ -36,12 +36,10 @@ class reviewer extends member
                 <td>" . $rows['aID'] . "</td>
                         <td>" . $rows['aName'] . "</td>
                         <td> 
-                            <a href='" . $rows['aDescLink'] . "'>" . $rows['aDescLink'] . "</a> </td>
+                            <a href='" . $rows['aDescLink'] . "'>" . $rows['aName'] . "'s Assignment Link</a> </td>
                         <td>" . $rows['aDeadline'] . "</td>
                         <td class='actionsCol'>
-                        <div class='actions' id='view'>
-                        <a href='assignProfile.php?aID=" . $rows['aID'] . "'>View</a>
-                        </div>
+                       
                             <div class='actions' id='edit'>
                                 <a href='editAssign.php?aID=" . $rows['aID'] . "'>Edit</a>
                                 </div>
@@ -106,14 +104,9 @@ class reviewer extends member
         return $stmt->rowCount();
     }
 
-    // public function delete()
-    // {
-    //     $passN = password_hash("123", PASSWORD_DEFAULT);
-    //     echo($passN);
-    //     $stmt = $this->conn->prepare("UPDATE REVIEWERS SET Password = $passN where Reviewer_ID = 1");
-    // }
+
 }
 
-// $rev = new Reviewer();
-// $rev->delete();
-
+// <div class='actions' id='view'>
+// <a href='assignProfile.php?aID=" . $rows['aID'] . "'>View</a>
+// </div>

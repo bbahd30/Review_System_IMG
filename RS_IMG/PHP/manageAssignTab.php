@@ -19,6 +19,11 @@ if(!empty($_POST))
         if(!$_SESSION['added'])
         {
             $aObj->adder( $aObj->getColumns(), $aObj->getValues(), $aObj->getArrValues(), $aObj->getTable());
+
+            $last = $aObj->findLastIndex($aObj->getTable(), $aObj->getIndex());
+            $name = "aID".$last;
+            $aObj->addAColumn($name, "COMPLETED", "INT(1)");
+            
             $_SESSION['added'] = 1;
         }
     }

@@ -175,7 +175,7 @@ body
 }
 .greeting h1
 {
-    padding-right: 10px;
+    padding-right: 20px;
 }
 
 .makeInvisible
@@ -211,7 +211,7 @@ body
 a 
 {
     text-decoration: none;
-    
+    overflow: hidden;
 }
 button
 {
@@ -303,6 +303,14 @@ h3
     background-color: #f73b3b;
 }
 
+#itern
+{
+    background-color: #ffa115de;
+}
+#passed
+{
+    background-color: aquamarine;
+}
 
 .parts
 {
@@ -323,6 +331,7 @@ form
 
 .active
 {
+    transition: 0.4s;
     padding: 10px 0 10px 8px;
     border-left: 10px solid var(--tab);
 }

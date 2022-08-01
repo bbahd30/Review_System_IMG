@@ -5,13 +5,11 @@ var iternNum = document.querySelector("#iternNum").value;
 document.querySelector("#yes").addEventListener("click",() =>
 {
     document.getElementById("itern").classList.remove    ("makeInvisible");
-    // add to itern count and list all the changes.
 })
 document.querySelector("#no").addEventListener("click",() =>
 {
    document.getElementById("itern").classList.add("makeInvisible");
 })
-// SO INDEX IS NUMBER OF CHANGES GIVEN
 
 document.querySelector("#addBtn").addEventListener("click", () =>
 {
@@ -44,6 +42,7 @@ document.querySelector("#submitBtn").addEventListener("click", () =>
             if (obj.status == 200)
             {
                 // show that data updated
+                window.location.href = '../PHP/ReviewerDashboard.php';
             }
         }
 
@@ -63,7 +62,7 @@ document.querySelector("#submitBtn").addEventListener("click", () =>
             if (obj2.status == 200)
             {
                 // show that data updated
-                alert("second");
+                window.location.href = '../PHP/ReviewerDashboard.php';
             }
         }
 
@@ -72,21 +71,21 @@ document.querySelector("#submitBtn").addEventListener("click", () =>
         obj2.send(data);
     }
     else if(document.querySelector("#no").checked)
-    {
+    {        
         var obj = new XMLHttpRequest();
-        
         obj.open("POST","../PHP/inserterAjax.php", true);
-       
+        var stat = "passed";
+        var data = "stat="+stat; 
         obj.onload = function()
         {
             if (obj.status == 200)
             {
                 // show that data updated
+                window.location.href = '../PHP/ReviewerDashboard.php';
             }
-        }
-
+        }    
         obj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-        obj.send("pass=true");
+        obj.send(data);
     }
 })

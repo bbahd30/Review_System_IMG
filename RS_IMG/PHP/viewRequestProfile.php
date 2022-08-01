@@ -88,6 +88,29 @@ if (isset($_SESSION['stat']))
             ?>
         </div>
 
+        <?php  
+            if($rowData[0]['IternNo'] != 0)
+            {
+                echo("<div class='inp'><h3>Changes to be Made for the Next Review</h3></div>");
+                $stmt2 = $reqManager->conn->prepare("SELECT * FROM ITERATIONS WHERE reqID = :reqID ORDER BY iterationID DESC;");
+                $stmt2->execute(array(":reqID" => $reqID));
+                if ($stmt2->rowCount() != 0)
+                {
+                    while ($iternData = $stmt2->fetch(PDO::FETCH_ASSOC))
+                    {
+                        ?>
+                            <div class="inp" id="changesGiven">
+                                <input required type="text" name="changes" id="changes" readonly value="<?php
+                                    echo($iternData['iternDesc']);
+                                ?>">     
+                            </div>
+                        <?php
+                    }
+                    
+                }
+            }
+        
+        ?>
 
 
         <div class="inp" id="comment">

@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@0;1&family=Satisfy&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=Poppins:ital,wght@0,400;0,600;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=Poppins:ital,wght@0,400;0,600;1,500&family=Ropa+Sans:ital@0;1&display=swap');
+
 *{
     margin: 0;
     padding: 0;
@@ -22,7 +22,7 @@ html, body
     padding: 0;
     overflow-x:hidden;
     background-color: var(--blue);
-    font-family: 'Lobster Two', cursive;
+    font-family: 'Ropa Sans', sans-serif;
     font-size: 27px;
 
 }
@@ -49,6 +49,7 @@ html, body
 }
 h1
 {
+    padding-top: 20px;
     text-align: center;
     padding-bottom: 20px;
     border-bottom: 1px solid silver;
@@ -66,6 +67,7 @@ h1
 }
 .inp > input
 {
+    color: darkcyan;
     width: 100%;
     padding: 0 5px 10px 5px;
     height: 40px;
@@ -87,7 +89,7 @@ h1
     margin-bottom: 30px;
     right: 0;
     padding: 5px 30px;
-    font-family: 'Lobster Two', cursive;
+    font-family: 'Ropa Sans', sans-serif;
 
   
 }
@@ -238,4 +240,9 @@ h3
     font-size: 20px;
     font-weight: 900;
     text-decoration-line: underline;
+}
+
+#changesGiven
+{
+    margin-top: 10px;
 }

@@ -62,26 +62,35 @@ if(isset($_POST['request']) && isset($_POST['aID']))
     $aID = $_POST['aID'];
     $reqValue = $_POST['request'];
 
-    if($reqValue)
+    try
     {
-        $reqManager->setArrValuesMatch($aID);
-        $rowData = $reqManager->rowDataFetch($reqManager->getUpdateCondition(), $reqManager->getArrValues(), $reqManager->getTable());
-        
-        if($rowData['IternNo'] == 0)
+        if($reqValue)
         {
             $reqManager->setArrValuesMatch($aID);
-            $reqManager->delete($reqManager->getTable(),$reqManager->getUpdateCondition(), $reqManager->getArrValues());
+            $rowData = $reqManager->rowDataFetch($reqManager->getUpdateCondition(),     $reqManager->getArrValues(), $reqManager->getTable());
+
+            if($rowData['IternNo'] == 0)
+            {
+                $reqManager->setArrValuesMatch($aID);
+                $reqManager->delete($reqManager->getTable(),$reqManager->getUpdateCondition(),  $reqManager->getArrValues());
+            }
+            else
+            {
+                $reqManager->setArrValues($aID, $reqValue);
+                $reqManager->updater($reqManager->getTable(), $reqManager->getColPair(),    $getUpdateCondition(), $getArrValues());
+            }
         }
         else
         {
-            $reqManager->setArrValues($aID, $reqValue);
-            $reqManager->updater($reqManager->getTable(), $reqManager->getColPair(), $getUpdateCondition(), $getArrValues());
+            $reqManager->requestForReview($aID, $reqValue);
         }
     }
-    else
+    catch(PDOException $e)
     {
-        $reqManager->requestForReview($aID, $reqValue);
+        header("location: ../PHP/StudentDashboard.php", true, 303);
+        exit();
     }
+    
 
     header("location: ../PHP/StudentDashboard.php", true, 303);
     exit();
@@ -130,8 +139,7 @@ if (isset($_SESSION['stat']))
         </div>
         <div id="linksMenu" class= "quickLinksDiv">
             <span class="menu">Menu</span>
-                <div class = "links" id="dash">Dashboard</div>
-                <!-- <div class = "links" id="adder">Manage Students</div> -->
+                <div class = "links active" id="dash">Dashboard</div>
                 <div class = "links" id="assign">See Assignments</div>
                 <div class = "links" id="requests">Request for Review</div>
                 <div class = "links">My Profile</div>

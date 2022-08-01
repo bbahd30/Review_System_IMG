@@ -9,6 +9,9 @@
     --blue: rgb(6, 188, 221);
     --text: rgb(88 61 144);
 }
+a{
+    text-decoration: none;
+}
 html, body
 {
     color: var(--text);

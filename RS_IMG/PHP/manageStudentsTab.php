@@ -23,6 +23,9 @@ if(!empty($_POST))
         if(!$_SESSION['added'])
         {
             $sManager->adder( $sManager->getColumns(), $sManager->getValues(), $sManager->getArrValues(), $sManager->getTable());
+            
+            $stmt = $sManager->conn->prepare("INSERT INTO COMPLETED (member_ID) VALUES (". $sID . ")");
+            $stmt->execute();
             $_SESSION['added'] = 1;
         }
     }

@@ -14,7 +14,7 @@ $tableType = $_SESSION['type'];
     <?php
 
 
-        $stmt = $reqManager->conn->prepare("SELECT REQUESTS.reqID AS reqID, type, comment, RESPONSES.member_ID AS member_ID FROM 
+        $stmt = $reqManager->conn->prepare("SELECT REQUESTS.reqID AS reqID, HOUR(`Time`) AS hour, MINUTE(`Time`) AS min, type, comment, RESPONSES.member_ID AS member_ID FROM 
         RESPONSES 
         JOIN REQUESTS ON RESPONSES.reqID = REQUESTS.reqID 
         WHERE REQUESTS.reqID = :reqID ORDER BY responseID");
@@ -43,11 +43,26 @@ $tableType = $_SESSION['type'];
                         <div class="msg">
 
                             <?php
-                            echo($rows['comment']);
+                            $meetLink = "https://meet.google.com/";
+                            if(strpos($rows['comment'], $meetLink) !== false)
+                            {
+                                $comment = $rows['comment'];
+                                $show = explode(": ", $comment, 2);
+                                $showLink = explode(" ", $show[1], 2);
+                                $realLink = $showLink[0];
+                                $splitNum = strpos($comment, $realLink);
+                                echo($show[0]. ": <a href = ". $realLink ." >". $realLink."</a> ". $showLink[1]);
+                            }
+                            else
+                            {
+                                echo($rows['comment']);
+                            }
                             ?>
                         </div>
                         <div class="time">
-                            12:30pm
+                        <?php
+                            echo($rows['hour'].":".$rows['min']);
+                            ?>
                         </div>
                     </div>
 <?php
@@ -64,7 +79,9 @@ $tableType = $_SESSION['type'];
                             <div class="msg">
 
                                 <div class="time">
-                                    12:30pm
+                                    <?php
+                                    echo($rows['hour'].":".$rows        ['min']);
+                                    ?>
                                 </div>
                                 <div class="senderName">
                                     <?php

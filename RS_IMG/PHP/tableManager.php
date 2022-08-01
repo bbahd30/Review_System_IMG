@@ -146,6 +146,17 @@ abstract class tableManager extends databaseConnection
         $stmt->execute();
     }
 
+
+    public function addAColumn($name, $table, $dataType)
+    {
+        $stmt= $this->conn->prepare("ALTER TABLE ".$table . " ADD COLUMN ". $name . " ". $dataType . ";");
+        $stmt->execute();
+    }
+    public function removeAColumn($name, $table)
+    {
+        $stmt= $this->conn->prepare("ALTER TABLE ".$table ." DROP COLUMN ". $name . " ". $dataType . ";");
+        $stmt->execute();
+    }
     abstract public function setArrValuesMatch($aID);
     // abstract public function setArrValues($aID, $aName = NULL, $aDescLink = NULL, $aDeadline = NULL);
 }
