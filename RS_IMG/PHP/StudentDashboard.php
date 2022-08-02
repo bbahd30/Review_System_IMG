@@ -194,9 +194,16 @@ if (isset($_SESSION['stat']))
                                     $stmt = $sManager->conn->prepare("select count(*) as TOTAL_DONE FROM COMPLETE WHERE sID". $_SESSION['member_ID']." = 1 GROUP BY sID" . $_SESSION['member_ID'].";");
                                     
                                     $stmt->execute();
-                                    $info = $stmt->fetch(PDO::FETCH_ASSOC);
-                                    echo($info['TOTAL_DONE']);
-                                ?>
+                                    if($stmt->rowCount() > 0)
+                                    {
+                                        $info = $stmt->fetch(PDO::FETCH_ASSOC);
+                                        echo($info['TOTAL_DONE']);
+                                    }
+                                    else
+                                    {
+                                        echo("0");
+                                    }                                
+                                    ?>
                             </div>
                         </div>
        
