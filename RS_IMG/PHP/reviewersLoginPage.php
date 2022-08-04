@@ -1,5 +1,6 @@
 <?php
 require_once "../PHP/reviewers.php";
+
 if (isset($_GET['invalid']))
 {
     $invalid = $_GET['invalid'];
@@ -12,48 +13,20 @@ if (!isset($_SESSION))
     session_start();
 }
 
-if (isset($_SESSION['die']))
+if (isset($_COOKIE['sessionID']))
 {
-    if (!$_SESSION['die'])
+    $rev->autoLogin($rev->conn, $rev->getTable(),$rev->getType());
+}
+else 
+{
+    if(!empty($_POST))
     {
-        // IF CORRECT COOKIES THEN ONLY ASK FOR COOKIES
-        if (isset($_COOKIE['token']) && isset($_COOKIE['Username']))
-        {
-            $rev->autoLogin($rev->conn, $rev->getTable(),$rev->getType())  ;
-        }
-        else 
-        {
-            if(!empty($_POST))
-            {
-                $username = $_POST['username'];
-                $password = $_POST['pass']; 
-                $rev->login($rev->conn, $rev->getTable(),$rev->getType(),  $username, $password); 
-            }
-        }
+        $username = $_POST['username'];
+        $password = $_POST['pass']; 
+        $rev->login($rev->conn, $rev->getTable(),$rev->getType(),  $username, $password); 
     }
 }
-else
-{
-    if (isset($_COOKIE['token']) && isset($_COOKIE['Username']))
-    {
-        $rev->autoLogin($rev->conn, $rev->getTable(), $rev->getType());
-    }
-    else 
-    {
-        if(!empty($_POST))
-        {
-            $username = $_POST['username'];
-            $password = $_POST['pass']; 
-            $rev->login($rev->conn, $rev->getTable(), $rev->getType(),  $username, $password); 
-        }
-    }
-}
-
-$_SESSION['die'] = false;
 $_SESSION['credWrong'] = false;
-
-
-// JINKA DIE TRUE HAI MAR GAYE SO PUNAR JANM AND AGAIN GO THROUGH THE SITE LOGIN PR FIR BADME JAB POST SO CHANGE TO THE FALSE AS FIR ZINDA HOGYE
 
 
 ?>

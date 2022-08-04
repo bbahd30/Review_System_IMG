@@ -1,3 +1,24 @@
+<?php
+
+if(isset($_COOKIE['sessionID']))
+{
+    if(isset($_COOKIE['type']))
+    {
+        $type = $_COOKIE['type'];
+
+        if ($type == 1)
+        {
+            header("location: PHP/reviewersLoginPage.php");
+        }
+        else
+        {
+            header("location: PHP/studentsLoginPage.php");
+            die();
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -12,26 +12,20 @@ $_SESSION['type'] = "REVIEWERS";
 if(isset($_POST['logout']))
 {
     session_destroy();
+    setcookie('sessionID', $_COOKIE['PHPSESSID'], time()-86400 * 30, "/");
+    $reqManager = new requestManager();
+    $username = $_SESSION['username'];
+    $stmt = $reqManager->conn->prepare("DELETE FROM SESSIONS WHERE Username = :username;");
+    $stmt->execute(array(":username" => $username));
+
+    if(isset($_COOKIE['type']))
+    {
+        setcookie('type', $_SESSION['type'], time()-86400 * 30, "/");
+    }
     header("location: ../PHP/reviewersLoginPage.php", true, 303);
     exit();
 }
 ?>
-
-<!-- ********************* -->
-<html>
-    <script>
-        window.onload = function()
-        {
-            // CHECK STATUS
-            <?php
-                require_once '../PHP/reviewers.php';
-                $rev = new reviewer();
-                $rev->statChecker($rev->conn, $rev->getTable(), $rev->getType());
-            ?>
-        };
-    </script>
-</html>
-<!-- ********************* -->
 
 <?php
 if(isset($_POST['delete']))
@@ -72,7 +66,6 @@ if(isset($_SESSION['added']))
     unset($_SESSION['added']);
 }
 
-
 if (isset($_SESSION['stat']))
 {
     $stat = $_SESSION['stat'];
@@ -84,7 +77,6 @@ if (isset($_SESSION['stat']))
     }
     else
     {
-      
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +100,7 @@ if (isset($_SESSION['stat']))
             </div>
             <div class="nameInfo">
                 <?php
-                    echo($_SESSION['Username'] . "<br>Reviewer");
+                    echo($_SESSION['username'] . "<br>Reviewer");
                 ?>
             </div>
         </div>
@@ -136,7 +128,7 @@ if (isset($_SESSION['stat']))
         <div class="nav">
             <div class="greeting"><h1>
                             Hello <?php
-                                    echo($_SESSION['Username']);
+                                    echo($_SESSION['username']);
                                     ?></h1>
             </div>
         </div>
@@ -182,34 +174,6 @@ if (isset($_SESSION['stat']))
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="reviewSection">
-                        <div class="head">
-                            Students
-                        </div>
-                        <div class="studentsInLine">
-                            <div class="dataStudent"></div>
-                            <div class="profile"></div>   
-                            <span class="fixed">Review Requested </ span>
-                        </div>
-                        <div class="studentsInLine">
-                            <div class="dataStudent"></div>
-                            <div class="profile"></div>   
-                            <span class="fixed">Review Requested </ span>
-                        </div>
-                        <div class="studentsInLine">
-                            <div class="dataStudent"></div>
-                            <div class="profile"></div>   
-                            <span class="fixed">Review Requested</  span>
-                        </div>
-                
-                        <br>
-                        Other Students
-                        <div class="profiles">
-                            <div class="dpStudents"></div>
-                            <div class="dpStudents"></div>
-                            <div class="dpStudents"></div>
-                        </div>
-                    </div> -->
                 </div>
             
             </div>
@@ -249,4 +213,7 @@ else
     $_SESSION['die'] = true;
     header("location: ../PHP/reviewersLoginPage.php");
 }
-?>
+
+
+
+      

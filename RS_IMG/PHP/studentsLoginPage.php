@@ -5,51 +5,29 @@ if (isset($_GET['invalid']))
 {
     $invalid = $_GET['invalid'];
 }
-
 $stud = new student();
 if (!isset($_SESSION))
 {
     session_start();
 }
 
-if (isset($_SESSION['die']))
+
+
+
+if (isset($_COOKIE['sessionID']))
 {
-    if (!$_SESSION['die'])
-    {
-        // IF CORRECT COOKIES THEN ONLY ASK FOR COOKIES
-        if (isset($_COOKIE['token']) && isset($_COOKIE['Username']))
-        {
-            $stud->autoLogin($stud->conn, $stud->getTable(), $stud->getType());
-        }
-        else 
-        {
-            if(!empty($_POST))
-            {
-                $username = $_POST['username'];
-                $password = $_POST['pass']; 
-                $stud->login($stud->conn, $stud->getTable(), $stud->getType(), $username, $password); 
-            }
-        }
-    }
+    $stud->autoLogin($stud->conn, $stud->getTable(), $stud->getType());
 }
-else
+else 
 {
-    if (isset($_COOKIE['token']) && isset($_COOKIE['Username']))
+    if(!empty($_POST))
     {
-        $stud->autoLogin($stud->conn, $stud->getTable(), $stud->getType());
-    }
-    else 
-    {
-        if(!empty($_POST))
-        {
-            $username = $_POST['username'];
-            $password = $_POST['pass']; 
-            $stud->login($stud->conn, $stud->getTable(), $stud->getType(), $username, $password); 
-        }
+        $username = $_POST['username'];
+        $password = $_POST['pass']; 
+        $stud->login($stud->conn, $stud->getTable(), $stud->getType(), $username, $password); 
     }
 }
 
-$_SESSION['die'] = false;
 $_SESSION['credWrong'] = false;
 
 

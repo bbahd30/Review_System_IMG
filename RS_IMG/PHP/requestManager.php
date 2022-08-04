@@ -179,9 +179,6 @@ class requestManager extends tableManager
                        
                     <td>" . $rows['aDeadline'] . "</td>
                     <td class='actionsCol'>
-                        <div class='actions' id='view'>
-                            <a href='assignProfile.php?aID=" . $rows['aID'] . "'>View</a>
-                        </div>
                         <div class='actions' id='request'>
                             <form action='../PHP/StudentDashboard.php' method='post'>
                                 ". $iternStatus. "

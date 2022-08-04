@@ -7,30 +7,27 @@ if(!isset($_SESSION))
 {
     session_start();
 }
+
 $_SESSION['type'] = "STUDENTS";
 
 if(isset($_POST['logout']))
 {
     session_destroy();
+    setcookie('sessionID', $_COOKIE['PHPSESSID'], time()-86400 * 30, "/");
+
+    if(isset($_COOKIE['type']))
+    {
+        setcookie('type', $_SESSION['type'], time()-86400 * 30, "/");
+    }
+    $username = $_SESSION['username'];
+    $sManager = new studentManager();
+    $stmt = $sManager->conn->prepare("DELETE FROM SESSIONS WHERE Username = :username;");
+    $stmt->execute(array(":username" => $username));
+
     header("location: ../PHP/studentsLoginPage.php", true, 303);
     exit();
 }
-?>
 
-<html>
-    <script>
-        window.onload = function()
-        {
-            // CHECK STATUS
-            <?php
-                $stud = new student();
-                $stud->statChecker($stud->conn, $stud->getTable(), $stud->getType());
-            ?>
-        };
-    </script>
-</html>
-
-<?php
 
 if(isset($_POST['delete']))
 {
@@ -102,15 +99,12 @@ if (isset($_SESSION['stat']))
     if(!$stat)
     {
         $_SESSION['die'] = true;
-        // remove above one if not working
         header("location: ../PHP/studentsLoginPage.php");
         die();
     }
     else
     {
-        ?>
-
-
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -120,6 +114,16 @@ if (isset($_SESSION['stat']))
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../CSS/Dashboard.css?v=<?php echo time(); ?>">
     <title>Document</title>
+    <script>
+        window.onload = function()
+        {
+            // CHECK STATUS
+            <?php
+                $stud = new student();
+                $stud->statChecker($stud->conn, $stud->getTable(), $stud->getType());
+            ?>
+        };
+    </script>
 </head>
 <body>
 
@@ -133,7 +137,7 @@ if (isset($_SESSION['stat']))
             </div>
             <div class="nameInfo">
                 <?php
-                    echo($_SESSION['Username'] . "<br>Student");
+                    echo($_SESSION['username'] . "<br>Student");
                 ?>
             </div>
         </div>
@@ -161,7 +165,7 @@ if (isset($_SESSION['stat']))
         <div class="nav">
             <div class="greeting"><h1>
                             Hello <?php
-                                    echo($_SESSION['Username']);
+                                    echo($_SESSION['username']);
                                     ?></h1>
             </div>
         </div>
@@ -191,7 +195,8 @@ if (isset($_SESSION['stat']))
                             <div class="data">
                                 <?php
                                     $sManager = new studentManager();
-                                    $stmt = $sManager->conn->prepare("select count(*) as TOTAL_DONE FROM COMPLETE WHERE sID". $_SESSION['member_ID']." = 1 GROUP BY sID" . $_SESSION['member_ID'].";");
+                                    $member_ID = $_SESSION['member_ID'];
+                                    $stmt = $sManager->conn->prepare("select count(*) as TOTAL_DONE FROM COMPLETE WHERE sID". $_SESSION['member_ID']." = 1 GROUP BY sID" . $member_ID .";");
                                     
                                     $stmt->execute();
                                     if($stmt->rowCount() > 0)
@@ -215,7 +220,7 @@ if (isset($_SESSION['stat']))
 
             <div class="rightPanel">
                     <div class="headPurpose">
-                        Deadlines to Meet
+                        <!-- Deadlines to Meet -->
                     </div>
                     <div class="image">
                         <img src="" alt="">
@@ -232,15 +237,11 @@ if (isset($_SESSION['stat']))
 
 </html>
 
-
-
 <?php
     }
 }
 else
 {
-    // correct
+    $_SESSION['die'] = true;
     header("location: ../PHP/studentsLoginPage.php");
-    die();
 }
-?>
